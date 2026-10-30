@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e0916">
+<title>Matthew’s Halloween Birthday</title>
+<meta property="og:title" content="Matthew’s Halloween Birthday — Costume Contest">
+<meta property="og:description" content="Enter your costume, see everyone’s, vote for Best Costume and Best Duo.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎃%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Creepster&family=Fredoka:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap">
+<style>
+  :root{
+    --ground:#0e0916; --surface:#1a1226; --surface-2:#241a33; --line:#3a2b4f;
+    --orange:#ff8a1f; --orange-2:#ffb15c; --slime:#b7ff3c; --bone:#f4ecd8; --bone-2:#bfb3a3; --pink:#ff4f9a; --blood:#c8102e;
+  }
+  *{box-sizing:border-box}
+  html{color-scheme:dark;-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--ground);color:var(--bone);font-family:"Fredoka",system-ui,sans-serif;font-size:16px;line-height:1.4;min-height:100dvh;
+    background-image:radial-gradient(ellipse 80% 40% at 50% -5%,rgba(255,138,31,.22),transparent),radial-gradient(circle at 10% 90%,rgba(183,255,60,.08),transparent 40%)}
+  button,input,select,textarea{font:inherit;color:inherit}
+  :focus-visible{outline:3px solid var(--slime);outline-offset:2px}
+  img{max-width:100%;display:block}
+
+  /* ---- ambient ---- */
+  .sky{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+  .ghost{position:absolute;font-size:34px;opacity:.18;animation:drift 18s linear infinite}
+  .ghost:nth-child(2){left:70%;animation-duration:24s;animation-delay:-8s;font-size:26px}
+  .ghost:nth-child(3){left:40%;animation-duration:30s;animation-delay:-15s;font-size:44px;opacity:.1}
+  @keyframes drift{from{transform:translateY(110vh) rotate(-6deg)}to{transform:translateY(-20vh) rotate(6deg)}}
+  @media (prefers-reduced-motion:reduce){.ghost{animation:none;display:none}}
+
+  /* ---- header ---- */
+  header{position:relative;z-index:1;text-align:center;padding:28px 18px 10px}
+  .eyebrow{font:600 12px "Oswald",sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--orange-2)}
+  h1{font:400 clamp(44px,11vw,88px)/.95 "Creepster",cursive;color:var(--orange);margin:8px 0 0;text-shadow:0 0 22px rgba(255,138,31,.55),0 4px 0 #6b3300;letter-spacing:.02em;text-wrap:balance}
+  h1 span{display:block;font-size:.62em;color:var(--bone);text-shadow:0 0 18px rgba(244,236,216,.3),0 3px 0 #3a2b4f}
+  .sub{margin-top:10px;color:var(--bone-2);font-size:15px}
+  .cake{font-size:30px;margin-top:6px;letter-spacing:.2em}
+
+  /* ---- layout ---- */
+  main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:10px 14px calc(96px + env(safe-area-inset-bottom))}
+  section{display:none}
+  section.on{display:block}
+  h2{font:400 34px/1 "Creepster",cursive;color:var(--bone);margin:14px 0 4px;letter-spacing:.02em}
+  .lede{color:var(--bone-2);margin:0 0 14px;font-size:15px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(3,1fr);background:rgba(14,9,22,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .tabs button{background:none;border:0;padding:8px 4px 6px;border-radius:12px;color:var(--bone-2);display:grid;justify-items:center;gap:2px;font:600 11px "Oswald",sans-serif;letter-spacing:.14em;text-transform:uppercase}
+  .tabs button i{font-style:normal;font-size:22px}
+  .tabs button[aria-current="true"]{color:var(--orange);background:rgba(255,138,31,.12)}
+
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--orange);color:#1a0d00;border:0;border-radius:999px;padding:14px 22px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 4px 0 #8a4400;width:100%}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 #8a4400}
+  .btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+  .btn.ghostb{background:transparent;color:var(--bone);border:2px solid var(--line);box-shadow:none}
+  .btn.slime{background:var(--slime);color:#102000;box-shadow:0 4px 0 #4e7a00}
+  .btn.danger{background:var(--blood);color:#fff;box-shadow:0 4px 0 #5a0012}
+  .btn.sm{width:auto;padding:9px 14px;font-size:14px}
+
+  /* ---- enter form ---- */
+  .field{margin-bottom:16px}
+  .field label{display:block;font:600 12px "Oswald",sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--orange-2);margin-bottom:6px}
+  .field input[type=text],.field textarea{width:100%;background:var(--ground);border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;color:var(--bone);font-size:17px}
+  .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--ground);border:1.5px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+  .seg button{background:none;border:0;border-radius:10px;padding:12px 8px;color:var(--bone-2);font-weight:600;font-size:15px}
+  .seg button[aria-pressed="true"]{background:var(--orange);color:#1a0d00}
+  .seg small{display:block;font-weight:400;font-size:12px;opacity:.8}
+  .shot{position:relative;border:2px dashed var(--line);border-radius:16px;aspect-ratio:4/5;display:grid;place-items:center;text-align:center;color:var(--bone-2);overflow:hidden;background:var(--ground);cursor:pointer}
+  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .shot input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .shot .hint{padding:20px;font-size:15px}
+  .shot .hint b{display:block;font-size:44px;margin-bottom:6px}
+  .shot.has .hint{display:none}
+  .err{background:rgba(200,16,46,.18);border:1px solid var(--blood);color:#ffb3bf;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}
+  .ok{background:rgba(183,255,60,.12);border:1px solid var(--slime);color:#dfffad;border-radius:12px;padding:10px 12px;margin:10px 0;font-size:14px}
+  .mine{display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:center}
+  .mine img{width:120px;aspect-ratio:4/5;object-fit:cover;border-radius:12px;border:2px solid var(--orange)}
+  .mine b{font-size:20px;display:block}
+  .pill{display:inline-block;font:600 11px "Oswald",sans-serif;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--bone-2);margin-top:4px}
+  .pill.single{color:var(--orange-2);border-color:var(--orange)}
+  .pill.duo{color:var(--pink);border-color:var(--pink)}
+
+  /* ---- gallery ---- */
+  .status{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--bone-2);margin:4px 0 12px}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--slime);box-shadow:0 0 8px var(--slime)}
+  .dot.off{background:var(--blood);box-shadow:0 0 8px var(--blood)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:22px}
+  @media (min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
+  .entry{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+  .entry.picked{border-color:var(--slime);box-shadow:0 0 0 2px var(--slime),0 0 24px rgba(183,255,60,.35)}
+  .entry.winner{border-color:var(--orange);box-shadow:0 0 0 2px var(--orange),0 0 30px rgba(255,138,31,.45)}
+  .entry .ph{aspect-ratio:4/5;background:var(--ground);cursor:zoom-in;position:relative}
+  .entry .ph img{width:100%;height:100%;object-fit:cover}
+  .entry .crown{position:absolute;top:6px;left:6px;font-size:28px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.7))}
+  .entry .you{position:absolute;top:8px;right:8px;background:var(--pink);color:#fff;font:600 10px "Oswald",sans-serif;letter-spacing:.14em;padding:4px 7px;border-radius:999px}
+  .entry .info{padding:10px 10px 10px}
+  .entry .nm{font-weight:700;font-size:15px;line-height:1.2}
+  .entry .cap{color:var(--bone-2);font-size:12.5px;margin-top:2px}
+  .entry .tally{font:600 13px "Oswald",sans-serif;letter-spacing:.1em;color:var(--orange-2);margin-top:4px;font-variant-numeric:tabular-nums}
+  .vote{margin:0 10px 10px;border:2px solid var(--line);background:transparent;color:var(--bone);border-radius:999px;padding:9px;font-weight:700;font-size:14px;cursor:pointer}
+  .vote[aria-pressed="true"]{background:var(--slime);color:#102000;border-color:var(--slime)}
+  .vote[disabled]{opacity:.45;cursor:not-allowed}
+  .empty{border:1px dashed var(--line);border-radius:16px;padding:26px;text-align:center;color:var(--bone-2)}
+
+  /* ---- results ---- */
+  .sealed{text-align:center;padding:30px 16px}
+  .sealed .big{font-size:72px}
+  .winner-card{text-align:center;padding:18px;margin-bottom:16px;border-color:var(--orange)}
+  .winner-card .ttl{font:400 26px "Creepster",cursive;color:var(--orange);letter-spacing:.03em}
+  .winner-card img{width:min(100%,320px);aspect-ratio:4/5;object-fit:cover;border-radius:16px;margin:12px auto;border:3px solid var(--orange);box-shadow:0 0 40px rgba(255,138,31,.4)}
+  .winner-card .nm{font-size:24px;font-weight:700}
+  .winner-card .tie{font-size:13px;color:var(--bone-2)}
+
+  /* ---- lightbox ---- */
+  .lb{position:fixed;inset:0;z-index:50;background:rgba(5,3,9,.94);display:none;place-items:center;padding:14px}
+  .lb.on{display:grid}
+  .lb img{max-height:82dvh;max-width:100%;border-radius:14px;object-fit:contain}
+  .lb .cap{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-weight:700;font-size:18px;text-shadow:0 2px 6px #000}
+
+  /* ---- host ---- */
+  .row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .toggle{appearance:none;width:52px;height:30px;border-radius:999px;background:var(--line);position:relative;cursor:pointer;flex:none}
+  .toggle::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:var(--bone);transition:transform .15s}
+  .toggle:checked{background:var(--slime)}
+  .toggle:checked::after{transform:translateX(22px)}
+  .hlist .row{align-items:center}
+  .hlist img{width:44px;height:55px;object-fit:cover;border-radius:8px}
+  .hlist .nm{flex:1;font-size:14px}
+  .hlist .n{font:600 14px "Oswald",sans-serif;color:var(--orange-2);width:56px;text-align:right;font-variant-numeric:tabular-nums}
+  .mono{font:500 13px ui-monospace,monospace;color:var(--bone-2);word-break:break-all}
+  .banner{background:var(--blood);color:#fff;text-align:center;padding:10px;font-weight:600;position:relative;z-index:2}
+
+  /* ---- TV ---- */
+  body.tv main{max-width:1400px;padding-bottom:30px}
+  body.tv .tabs,body.tv header .sub{display:none}
+  body.tv .grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr))}
+  body.tv h1{font-size:clamp(60px,7vw,110px)}
+
+  canvas.confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"><span class="ghost" style="left:12%">👻</span><span class="ghost">🦇</span><span class="ghost">👻</span></div>
+<div class="banner" id="setupBanner" hidden>Site isn’t connected to its database yet.</div>
+
+<header>
+  <div class="eyebrow">October 31 · Costume Contest</div>
+  <h1>Matthew’s<span>Halloween Birthday</span></h1>
+  <div class="cake">🎃🎂🕯️</div>
+  <div class="sub">Two crowns tonight: <b>Best Costume</b> and <b>Best Duo</b>. Enter, look, vote.</div>
+</header>
+
+<main>
+  <!-- ENTER -->
+  <section id="enter" class="on">
+    <h2>Enter the contest</h2>
+    <p class="lede">Your name, solo or duo, one photo in costume. You can retake it any time before entries close.</p>
+    <div class="card" id="enterCard">
+      <div id="mineBox" hidden>
+        <div class="ok">You’re in. Go look at everyone else and cast your votes.</div>
+        <div class="mine"><img id="mineImg" alt=""><div><b id="mineNames"></b><span class="pill" id="mineKind"></span><div id="mineCap" style="color:var(--bone-2);font-size:14px;margin-top:4px"></div></div></div>
+        <div style="margin-top:14px"><button class="btn ghostb" id="redo">Change my entry</button></div>
+      </div>
+      <form id="form" autocomplete="off">
+        <div class="field"><label for="names">Name (both names for a duo)</label><input type="text" id="names" required maxlength="80" placeholder="e.g. Maya &amp; Matt"></div>
+        <div class="field"><label>Competing as</label>
+          <div class="seg"><button type="button" data-kind="single" aria-pressed="true">Solo<small>Best Costume</small></button><button type="button" data-kind="duo" aria-pressed="false">Duo<small>Best Duo</small></button></div>
+        </div>
+        <div class="field"><label>Costume photo</label>
+          <label class="shot" id="shot"><img id="preview" alt="" hidden><div class="hint"><b>📸</b>Tap to take a photo<br><span style="font-size:13px">or pick one from your camera roll</span></div><input type="file" id="file" accept="image/*" capture="environment"></label>
+        </div>
+        <div class="field"><label for="caption">What are you? (optional)</label><input type="text" id="caption" maxlength="140" placeholder="e.g. Sexy tax audit"></div>
+        <div id="formErr" class="err" hidden></div>
+        <button class="btn" type="submit" id="submitBtn">Enter the contest 🎃</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery">
+    <h2>The lineup</h2>
+    <div class="status"><span class="dot" id="voteDot"></span><span id="voteStatus">Voting is open</span></div>
+    <p class="lede">One vote in each category. Change your mind as often as you like until voting closes.</p>
+    <h2 style="font-size:28px;color:var(--orange-2)">🏆 Best Costume</h2>
+    <div class="grid" id="gridSingle"></div>
+    <h2 style="font-size:28px;color:var(--pink)">💞 Best Duo</h2>
+    <div class="grid" id="gridDuo"></div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results">
+    <h2>The crowns</h2>
+    <div id="resultsBox"></div>
+  </section>
+
+  <!-- HOST -->
+  <section id="host">
+    <h2>Host desk</h2>
+    <div class="card" id="hostLogin">
+      <div class="field"><label for="pass">Passcode</label><input type="text" id="pass" autocapitalize="characters" autocomplete="off"></div>
+      <div id="hostErr" class="err" hidden></div>
+      <button class="btn" id="hostGo">Unlock</button>
+    </div>
+    <div id="hostPanel" hidden>
+      <div class="card">
+        <div class="row"><div><b>Entries open</b><div style="font-size:13px;color:var(--bone-2)">Guests can add or change their costume</div></div><input type="checkbox" class="toggle" id="tEntries"></div>
+        <div class="row"><div><b>Voting open</b><div style="font-size:13px;color:var(--bone-2)">Close it before you reveal</div></div><input type="checkbox" class="toggle" id="tVoting"></div>
+        <div class="row"><div><b>Reveal winners</b><div style="font-size:13px;color:var(--bone-2)">Shows results to everyone</div></div><input type="checkbox" class="toggle" id="tReveal"></div>
+      </div>
+      <div class="card" style="margin-top:14px"><b>Live tallies</b> <span style="color:var(--bone-2);font-size:13px">(only you can see these before reveal)</span><div class="hlist" id="hostList"></div></div>
+      <div class="card" style="margin-top:14px"><b>Big screen</b><p style="color:var(--bone-2);font-size:14px;margin:6px 0 10px">Open this on a TV or laptop. It refreshes itself.</p><a class="btn ghostb" id="tvLink" href="#tv" target="_blank" rel="noopener">Open TV mode</a></div>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <button data-tab="enter" aria-current="true"><i>🎭</i>Enter</button>
+  <button data-tab="gallery" aria-current="false"><i>🗳️</i>Vote</button>
+  <button data-tab="results" aria-current="false"><i>👑</i>Winners</button>
+</nav>
+
+<div class="lb" id="lb" role="dialog" aria-label="Photo"><img id="lbImg" alt=""><div class="cap" id="lbCap"></div></div>
+<canvas class="confetti" id="confetti" hidden></canvas>
+
+<script>
+(function () {
+  /* ===== config: filled in by Matt's Supabase project ===== */
+  const CONFIG = { url: "__SUPABASE_URL__", key: "__SUPABASE_ANON_KEY__" };
+  const READY = !CONFIG.url.startsWith("__");
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  if (!READY) $("#setupBanner").hidden = false;
+
+  /* ===== identity ===== */
+  const device = (() => { try { let d = localStorage.getItem("mhb-device"); if (!d) { d = crypto.randomUUID(); localStorage.setItem("mhb-device", d); } return d; } catch { return "tmp-" + Math.random().toString(36).slice(2) + Date.now(); } })();
+  const isTV = location.hash === "#tv";
+  if (isTV) document.body.classList.add("tv");
+
+  /* ===== api ===== */
+  const H = { apikey: CONFIG.key, Authorization: "Bearer " + CONFIG.key };
+  async function rpc(name, args) {
+    const r = await fetch(`${CONFIG.url}/rest/v1/rpc/${name}`, { method: "POST", headers: { ...H, "Content-Type": "application/json" }, body: JSON.stringify(args || {}) });
+    if (!r.ok) { let m = "Something went wrong"; try { m = (await r.json()).message || m; } catch {} throw new Error(m); }
+    const t = await r.text(); return t ? JSON.parse(t) : null;
+  }
+  async function get(path) { const r = await fetch(`${CONFIG.url}/rest/v1/${path}`, { headers: H }); if (!r.ok) throw new Error("Could not load"); return r.json(); }
+  async function upload(path, blob) {
+    const r = await fetch(`${CONFIG.url}/storage/v1/object/costumes/${path}`, { method: "POST", headers: { ...H, "Content-Type": blob.type }, body: blob });
+    if (!r.ok) { let m = "Photo upload failed"; try { m = (await r.json()).message || m; } catch {} throw new Error(m); }
+  }
+  const photoUrl = (p) => `${CONFIG.url}/storage/v1/object/public/costumes/${p}`;
+
+  /* ===== state ===== */
+  let settings = { voting_open: true, revealed: false, entries_open: true };
+  let entries = [], mine = null, myVotes = {}, tallies = null, hostPass = sessionStorage.getItem("mhb-host") || "";
+
+  async function refresh() {
+    if (!READY) return;
+    try {
+      const [s, e, me, mv] = await Promise.all([
+        get("settings?id=eq.1&select=voting_open,revealed,entries_open"),
+        get("entries_public?select=*&order=created_at.asc"),
+        rpc("my_entry", { p_device: device }),
+        rpc("my_votes", { p_device: device }),
+      ]);
+      settings = s[0] || settings; entries = e; mine = (me && me[0]) || null;
+      myVotes = {}; (mv || []).forEach((v) => { myVotes[v.category] = v.entry_id; });
+      if (settings.revealed || hostPass) {
+        try { const t = await rpc("results", { p_passcode: hostPass || null }); tallies = {}; (t || []).forEach((r) => { tallies[r.entry_id] = Number(r.votes); }); }
+        catch { tallies = null; }
+      } else tallies = null;
+      render();
+    } catch (err) { console.warn(err); }
+  }
+
+  /* ===== tabs ===== */
+  function showTab(name) {
+    document.querySelectorAll("main > section").forEach((s) => s.classList.toggle("on", s.id === name));
+    document.querySelectorAll(".tabs button").forEach((b) => b.setAttribute("aria-current", b.dataset.tab === name ? "true" : "false"));
+    window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll(".tabs button").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+  if (location.hash === "#host") showTab("host");
+  if (isTV) showTab("gallery");
+  window.addEventListener("hashchange", () => { if (location.hash === "#host") showTab("host"); });
+
+  /* ===== enter form ===== */
+  let kind = "single", photoBlob = null;
+  document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
+    document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true"); kind = b.dataset.kind;
+    $("#names").placeholder = kind === "duo" ? "e.g. Maya & Matt" : "e.g. Matt";
+  }));
+  $("#file").addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const img = new Image(), url = URL.createObjectURL(f);
+    img.onload = () => {
+      const max = 1400, k = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement("canvas"); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob((b) => { photoBlob = b; const pv = $("#preview"); pv.src = URL.createObjectURL(b); pv.hidden = false; $("#shot").classList.add("has"); }, "image/jpeg", 0.85);
+      URL.revokeObjectURL(url);
+    };
+    img.onerror = () => showErr("#formErr", "That image couldn’t be read. Try another photo.");
+    img.src = url;
+  });
+  function showErr(sel, msg) { const el = $(sel); el.textContent = msg; el.hidden = !msg; }
+
+  $("#form").addEventListener("submit", async (e) => {
+    e.preventDefault(); showErr("#formErr", "");
+    if (!READY) return showErr("#formErr", "The site isn’t connected to its database yet.");
+    const names = $("#names").value.trim(); if (!names) return $("#names").focus();
+    if (!photoBlob) return showErr("#formErr", "Add a costume photo first.");
+    if (!settings.entries_open) return showErr("#formErr", "Entries are closed.");
+    const btn = $("#submitBtn"); btn.disabled = true; btn.textContent = "Uploading…";
+    try {
+      const path = `${device.slice(0, 8)}-${Date.now()}.jpg`;
+      await upload(path, photoBlob);
+      await rpc("submit_entry", { p_device: device, p_names: names, p_kind: kind, p_caption: $("#caption").value.trim(), p_photo: path });
+      photoBlob = null; $("#file").value = ""; $("#preview").hidden = true; $("#shot").classList.remove("has");
+      await refresh(); showTab("gallery");
+    } catch (err) { showErr("#formErr", err.message); }
+    finally { btn.disabled = false; btn.textContent = "Enter the contest 🎃"; }
+  });
+  $("#redo").addEventListener("click", () => { $("#mineBox").hidden = true; $("#form").hidden = false; $("#names").value = mine ? mine.names : ""; $("#caption").value = mine ? (mine.caption || "") : ""; });
+
+  /* ===== voting ===== */
+  async function vote(category, id) {
+    try { await rpc("cast_vote", { p_device: device, p_category: category, p_entry: id }); myVotes[category] = id; render(); }
+    catch (err) { alert(err.message); }
+  }
+
+  /* ===== lightbox ===== */
+  function openLb(e) { $("#lbImg").src = photoUrl(e.photo_path); $("#lbCap").textContent = e.names + (e.caption ? " · " + e.caption : ""); $("#lb").classList.add("on"); }
+  $("#lb").addEventListener("click", () => $("#lb").classList.remove("on"));
+
+  /* ===== render ===== */
+  function card(e, opts) {
+    const picked = myVotes[e.kind] === e.id, own = mine && mine.id === e.id;
+    const canVote = settings.voting_open && !own && !isTV;
+    const t = tallies && tallies[e.id] != null ? tallies[e.id] : (tallies ? 0 : null);
+    return `<div class="entry ${picked ? "picked" : ""} ${opts.winner ? "winner" : ""}" data-id="${e.id}">
+      <div class="ph" data-lb="${e.id}">${opts.winner ? `<span class="crown">👑</span>` : ""}${own ? `<span class="you">YOU</span>` : ""}<img src="${photoUrl(e.photo_path)}" alt="${esc(e.names)}" loading="lazy"></div>
+      <div class="info"><div class="nm">${esc(e.names)}</div>${e.caption ? `<div class="cap">${esc(e.caption)}</div>` : ""}${t != null && (settings.revealed || opts.showTally) ? `<div class="tally">${t} vote${t === 1 ? "" : "s"}</div>` : ""}</div>
+      ${isTV || settings.revealed ? "" : `<button class="vote" data-vote="${e.kind}" data-id="${e.id}" aria-pressed="${picked}" ${canVote ? "" : "disabled"}>${own ? "That’s you" : picked ? "Your pick ✓" : settings.voting_open ? "Vote" : "Voting closed"}</button>`}
+    </div>`;
+  }
+  function winners(kind) {
+    if (!tallies) return [];
+    const list = entries.filter((e) => e.kind === kind).map((e) => ({ e, n: tallies[e.id] || 0 })).sort((a, b) => b.n - a.n);
+    if (!list.length || list[0].n === 0) return [];
+    return list.filter((x) => x.n === list[0].n).map((x) => x.e);
+  }
+  function render() {
+    // enter tab
+    const mineBox = $("#mineBox"), form = $("#form");
+    if (mine) {
+      mineBox.hidden = false; form.hidden = true;
+      $("#mineImg").src = photoUrl(mine.photo_path); $("#mineNames").textContent = mine.names;
+      $("#mineKind").textContent = mine.kind === "duo" ? "Duo · Best Duo" : "Solo · Best Costume"; $("#mineKind").className = "pill " + mine.kind;
+      $("#mineCap").textContent = mine.caption || "";
+      $("#redo").hidden = !settings.entries_open;
+    } else { mineBox.hidden = true; form.hidden = false; }
+    $("#submitBtn").disabled = !settings.entries_open; if (!settings.entries_open) $("#submitBtn").textContent = "Entries are closed";
+
+    // gallery
+    $("#voteDot").classList.toggle("off", !settings.voting_open);
+    $("#voteStatus").textContent = settings.revealed ? "Voting is over. Winners are in." : settings.voting_open ? "Voting is open" : "Voting is closed. Waiting on the birthday boy.";
+    const wS = settings.revealed ? winners("single").map((e) => e.id) : [], wD = settings.revealed ? winners("duo").map((e) => e.id) : [];
+    const singles = entries.filter((e) => e.kind === "single"), duos = entries.filter((e) => e.kind === "duo");
+    $("#gridSingle").innerHTML = singles.length ? singles.map((e) => card(e, { winner: wS.includes(e.id) })).join("") : `<div class="empty" style="grid-column:1/-1">No solo costumes yet. Be first.</div>`;
+    $("#gridDuo").innerHTML = duos.length ? duos.map((e) => card(e, { winner: wD.includes(e.id) })).join("") : `<div class="empty" style="grid-column:1/-1">No duos yet. Grab a partner.</div>`;
+    document.querySelectorAll("[data-vote]").forEach((b) => b.addEventListener("click", () => vote(b.dataset.vote, b.dataset.id)));
+    document.querySelectorAll("[data-lb]").forEach((p) => p.addEventListener("click", () => { const e = entries.find((x) => x.id === p.dataset.lb); if (e) openLb(e); }));
+
+    // results
+    const rb = $("#resultsBox");
+    if (!settings.revealed) {
+      rb.innerHTML = `<div class="card sealed"><div class="big">🔮</div><b style="font-size:20px">Sealed until Matthew says so.</b><p style="color:var(--bone-2)">${entries.length} costume${entries.length === 1 ? "" : "s"} entered · ${settings.voting_open ? "voting is open" : "voting is closed"}</p></div>`;
+    } else {
+      const block = (title, kind) => {
+        const w = winners(kind);
+        if (!w.length) return `<div class="card winner-card"><div class="ttl">${title}</div><p style="color:var(--bone-2)">No votes were cast in this category.</p></div>`;
+        return `<div class="card winner-card"><div class="ttl">${title}</div>${w.map((e) => `<img src="${photoUrl(e.photo_path)}" alt=""><div class="nm">👑 ${esc(e.names)}</div>${e.caption ? `<div style="color:var(--bone-2)">${esc(e.caption)}</div>` : ""}<div class="tally">${tallies[e.id]} votes</div>`).join("")}${w.length > 1 ? `<div class="tie">It’s a tie. Matthew decides. Bribes accepted.</div>` : ""}</div>`;
+      };
+      rb.innerHTML = block("Best Costume", "single") + block("Best Duo", "duo");
+      if (!render.confettiDone) { render.confettiDone = true; confetti(); }
+    }
+
+    // host
+    if (hostPass) {
+      $("#hostLogin").hidden = true; $("#hostPanel").hidden = false;
+      $("#tEntries").checked = settings.entries_open; $("#tVoting").checked = settings.voting_open; $("#tReveal").checked = settings.revealed;
+      const rows = entries.map((e) => `<div class="row"><img src="${photoUrl(e.photo_path)}" alt=""><div class="nm"><b>${esc(e.names)}</b><br><span class="pill ${e.kind}">${e.kind}</span></div><div class="n">${tallies ? (tallies[e.id] || 0) : "–"}</div><button class="btn danger sm" data-del="${e.id}">Remove</button></div>`).join("");
+      $("#hostList").innerHTML = rows || `<div class="empty" style="margin-top:10px">No entries yet.</div>`;
+      document.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", async () => {
+        if (!confirm("Remove this entry and its votes?")) return;
+        try { await rpc("host_delete_entry", { p_passcode: hostPass, p_entry: b.dataset.del }); refresh(); } catch (err) { alert(err.message); }
+      }));
+    }
+  }
+
+  /* ===== host ===== */
+  $("#hostGo").addEventListener("click", async () => {
+    showErr("#hostErr", "");
+    const p = $("#pass").value.trim();
+    try { const ok = await rpc("host_check", { p_passcode: p }); if (!ok) return showErr("#hostErr", "Wrong passcode."); hostPass = p; sessionStorage.setItem("mhb-host", p); refresh(); }
+    catch (err) { showErr("#hostErr", err.message); }
+  });
+  async function hostSet(patch) {
+    try { await rpc("host_update", { p_passcode: hostPass, p_voting_open: patch.voting_open ?? null, p_revealed: patch.revealed ?? null, p_entries_open: patch.entries_open ?? null }); refresh(); }
+    catch (err) { alert(err.message); refresh(); }
+  }
+  $("#tEntries").addEventListener("change", (e) => hostSet({ entries_open: e.target.checked }));
+  $("#tVoting").addEventListener("change", (e) => hostSet({ voting_open: e.target.checked }));
+  $("#tReveal").addEventListener("change", (e) => {
+    if (e.target.checked && settings.voting_open && !confirm("Voting is still open. Reveal anyway?")) { e.target.checked = false; return; }
+    hostSet({ revealed: e.target.checked });
+  });
+  $("#tvLink").href = location.pathname + "#tv";
+
+  /* ===== confetti ===== */
+  function confetti() {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const c = $("#confetti"); c.hidden = false; c.width = innerWidth; c.height = innerHeight; const ctx = c.getContext("2d");
+    const cols = ["#ff8a1f", "#b7ff3c", "#ff4f9a", "#f4ecd8"], ps = Array.from({ length: 160 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height, r: 4 + Math.random() * 6, v: 2 + Math.random() * 3, s: Math.random() * 6.28, col: cols[Math.floor(Math.random() * 4)] }));
+    let t = 0; (function f() { ctx.clearRect(0, 0, c.width, c.height); ps.forEach((p) => { p.y += p.v; p.x += Math.sin(p.s + t / 20); ctx.fillStyle = p.col; ctx.fillRect(p.x, p.y, p.r, p.r * .6); }); if (++t < 260) requestAnimationFrame(f); else c.hidden = true; })();
+  }
+
+  /* ===== go ===== */
+  render(); refresh();
+  setInterval(refresh, isTV ? 6000 : 10000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) refresh(); });
+})();
+</script>
+</body>
+</html>
