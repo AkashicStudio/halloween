@@ -228,7 +228,7 @@
 <script>
 (function () {
   /* ===== config: filled in by Matt's Supabase project ===== */
-  const CONFIG = { url: "__SUPABASE_URL__", key: "__SUPABASE_ANON_KEY__" };
+  const CONFIG = { url: "https://udyrzdpiceyqtbsvrwoc.supabase.co", key: "sb_publishable_FiPXFu98eIV2cMNj0HUDYA_60PioAla" };
   const READY = !CONFIG.url.startsWith("__");
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -240,7 +240,7 @@
   if (isTV) document.body.classList.add("tv");
 
   /* ===== api ===== */
-  const H = { apikey: CONFIG.key, Authorization: "Bearer " + CONFIG.key };
+  const H = { apikey: CONFIG.key };
   async function rpc(name, args) {
     const r = await fetch(`${CONFIG.url}/rest/v1/rpc/${name}`, { method: "POST", headers: { ...H, "Content-Type": "application/json" }, body: JSON.stringify(args || {}) });
     if (!r.ok) { let m = "Something went wrong"; try { m = (await r.json()).message || m; } catch {} throw new Error(m); }
